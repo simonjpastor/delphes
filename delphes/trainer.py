@@ -42,15 +42,19 @@ def rmnumbers_df(df, column_name):
 
 
 # Remove the undesirable punctuations in the tweet's column
+# Remove the undesirable punctuations in the tweet's column
 def rmpunct_df(df, column_name):
     '''
-    This function removes all the punctuations of a column made of strings.
+    This function removes all the punctuations, all the "rt" and remove multiple spaces
+    of a column made of strings.
     '''
     punct = string.punctuation
     df = df.copy()
     def replace_punct(text):
         for punctu in punct:
             text = text.replace(punctu, ' ')
+            text = text.replace(' rt ','')
+            text = " ".join(text.split())
         return text
     df[column_name] = df[column_name].apply(replace_punct)
     return df
@@ -61,7 +65,7 @@ def rmemojis_df(df):
     '''
     This function removes all the emojis of a column made of strings.
     Be careful to translate in latin alphabet before applying this function :
-    it also removes cyrillic alphabet
+    it also removes cyrillic alphabet.
     '''
     df = df.copy()
     df = df.astype(str).apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
