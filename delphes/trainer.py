@@ -59,6 +59,20 @@ def rmpunct_df(df, column_name):
     df[column_name] = df[column_name].apply(replace_punct)
     return df
 
+# Remove the stopwords in the tweet's column
+def rmstopwords_df(df, column_name):
+    '''
+    This function removes all the stopwords of a column made of strings.
+    '''
+    df = df.copy()
+    stop_words = stopwords.words('english')
+    def remove_stopwords(text):
+        for word in stop_words:
+            text = text.replace(f' {word} ', ' ')
+        return text
+    df[column_name] = df[column_name].apply(remove_stopwords)
+    return df
+
 
 # Remove the undesirable emojis in the entire dataframe
 def rmemojis_df(df):
