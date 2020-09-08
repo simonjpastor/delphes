@@ -10,3 +10,7 @@ yapf
 python-gitlab
 twine
 googletrans
+gensim
+nltk
+tensorflow
+
