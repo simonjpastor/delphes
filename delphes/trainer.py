@@ -84,3 +84,74 @@ def rmemojis_df(df):
     df = df.copy()
     df = df.astype(str).apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
     return df
+
+# Sentence embedding
+def embed_sentence(word2vec, sentence):
+    '''
+    Embed one sentence.
+    '''
+    y = []
+    for word in sentence:
+        if word in word2vec.wv.vocab.keys():
+           y.append(word2vec[word])
+    return np.array(y)
+
+#Sentence embedding
+def embedding(word2vec, sentences):
+    '''
+    Embed  set of sentences.
+    '''
+    y = []
+    for sentence in sentences:
+        y.append(embed_sentence(word2vec, sentence))
+    return y
+
+
+# Cette fonction retourne automatiquement X_train, X_test, y_train, y_test de notre base de données twitter.
+def get_train_test_objects(df, X, y):
+    '''
+    Les étapes que cette fonction réalise sont en commentaires. X est la/les colonnes qui sont nos inputs.
+    y est la colonne de nos outputs.
+    '''
+    # Copie de la base de données pour éviter les problèmes d'assignation abusive.
+    df = df.copy()
+    # Récupération de tous les tweets et du nom du député qui les a posté. Création de la cible y.
+    df = df[[X, y]]
+    y1 = pd.get_dummies(df[y])
+    # Transformation des tweets en suite de mots (strings) dans une liste.
+    sentences = df[X]
+    sentences_inter = []
+    for sentence in sentences:
+        sentences_inter.append(sentence.split())
+    # Séparation des données d'entraînement et de test
+    sentences_train, sentences_test, y_train, y_test = train_test_split(sentences_inter, y1, test_size = 0.3)
+    # Vectorisation des phrases
+    word2vec = Word2Vec(sentences=sentences_train)
+    # Création des données d'entrée.
+    X_train = embedding(word2vec,sentences_train)
+    X_test = embedding(word2vec,sentences_test)
+    X_train_pad = pad_sequences(X_train, padding='post',value=-1000, dtype='float32')
+    X_test_pad = pad_sequences(X_test, padding='post',value=-1000, dtype='float32')
+    # Création des données cibles.
+    y_train = y_train.values
+    y_test = y_test.values
+    # Sorties de la fonction
+    return X_train_pad, y_train, X_test_pad, y_test
+
+
+# Modeling
+def init_model():
+    '''
+    Initialise un modèle avec les couches spécifiées. Le compile pour effectuer une classification multiple.
+    '''
+    model = Sequential()
+    model.add(layers.Masking(mask_value = -1000))
+    model.add(layers.LSTM(15, activation='tanh'))
+    model.add(layers.Dense(20, activation='relu'))
+    model.add(layers.Dense(10, activation='relu'))
+    model.add(layers.Dense(10, activation='softmax'))
+
+    model.compile(loss='categorical_crossentropy',
+              optimizer='rmsprop',
+              metrics=['accuracy'])
+    return model
