@@ -155,3 +155,28 @@ def init_model():
               optimizer='rmsprop',
               metrics=['accuracy'])
     return model
+
+####################### Prediction ############################
+# Renvoie le député le plus proche de votre tweet
+def predict_deputy(df, model, tweet, by_tweet = False):
+    '''
+    La fonction prend la base de données originale (par député), un modèle entraîné et un texte en entrée.
+    Elle renvoie le député le plus proche du texte proposé.
+    Attention : le texte en entrée doit être une liste d'au moins deux éléments (strings).
+    Quand by_tweet = False, on ressort le député le plus proche de l'ENSEMBLE des tweets.
+    Quand by_tweet = True, on sort le député le plus proche POUR CHAQUE tweet.
+    '''
+    tweet_inter = []
+    for tw in tweet:
+        tweet_inter.append(tw.split())
+    X_example = embedding(word2vec,tweet_inter)
+    X_example_pad = pad_sequences(X_example, padding='post',value=-1000, dtype='float32')
+    prediction = model.predict(X_example_pad)
+    if not by_tweet:
+        deputy = list(df['name'])[prediction.sum(axis=0).argmax()]
+        return deputy
+    else:
+        deputies_by_tweet = []
+        for element in prediction:
+            deputies_by_tweet.append(list(df['name'])[element.argmax()])
+        return deputies_by_tweet
