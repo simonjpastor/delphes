@@ -5,7 +5,7 @@ class Delphes:
 
   def get_data(self):
 
-    df = pd.read_pickle('../../delphes/data/final4_clean.csv')
+    df = pd.read_pickle('../../delphes/data/extended_tweet_df')
     df = df.reset_index(drop=True)
     data = df.copy()
     data['sex'] = 0
