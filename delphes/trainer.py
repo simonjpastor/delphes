@@ -5,13 +5,13 @@ import string
 
 # Lecture et stockage de la base de données
 
-from data.data import Delphes
-import Delphes().get_data()
+from delphes.real_data import Delphes
 
 class Trainer:
 
 
-    tweet_df = self.get_data()
+    def __init__(self):
+        self.data = Delphes().get_data()
 
 
     # Remove the undesirable elements in the entire dataframe
