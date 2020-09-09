@@ -21,7 +21,7 @@ class Trainer:
         Be careful to apply it BEFORE all the other preprocessing steps (if not it wont'
         be recognized as a URL)
         '''
-        df = self.get_data().copy
+        df = df.copy()
         df[column_name] = df[column_name].str.replace('http\S+|www.\S+|@\S+|#\S+', '', case=False)
         return df
 
@@ -41,7 +41,7 @@ class Trainer:
         '''
         This function removes all the digits of a column made of strings.
         '''
-        df = self.rmnumbers_df().copy
+        df = df.copy
         def remove_numbers(text):
             return ''.join(word for word in text if not word.isdigit())
         df[column_name] = df[column_name].apply(remove_numbers)
@@ -57,7 +57,7 @@ class Trainer:
         '''
 
         punct = string.punctuation
-        df = self.rmnumbers_df().copy()
+        df = df.copy()
         def replace_punct(text):
             for punctu in punct:
                 text = text.replace(punctu, ' ')
@@ -72,7 +72,7 @@ class Trainer:
         '''
         This function removes all the stopwords of a column made of strings.
         '''
-        df = self.rmpunct_df().copy()
+        df = df.copy()
         stop_words = stopwords.words('english')
         def remove_stopwords(text):
             for word in stop_words:
@@ -87,7 +87,7 @@ class Trainer:
         '''
         This function lemmatize the words of a column made of strings.
         '''
-        df = self.rmstopwords_df().copy()
+        df = df.copy()
         def lemmatize(text):
             lemmatizer = WordNetLemmatizer()
             retour = []
@@ -108,7 +108,7 @@ class Trainer:
         '''
         One or two letters words are deleted from the dataset.
         '''
-        df = self.lemmatize_df().copy()
+        df = df.copy()
         def tester(text):
             text = ' '.join( [w for w in text.split() if len(w)>2] )
             return text
@@ -125,7 +125,7 @@ class Trainer:
         Be careful to translate in latin alphabet before applying this function :
         it also removes cyrillic alphabet.
         '''
-        df = self.erase_fewletter_df().copy()
+        df = df.copy()
         df = df.astype(str).apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
         return df
 
@@ -158,7 +158,7 @@ class Trainer:
         y est la colonne de nos outputs.
         '''
         # Copie de la base de données pour éviter les problèmes d'assignation abusive.
-        df = df.rmemojis_df().copy()
+        df = df.copy()
         # Récupération de tous les tweets et du nom du député qui les a posté. Création de la cible y.
         df = df[[X, y]]
         y1 = pd.get_dummies(df[y])
