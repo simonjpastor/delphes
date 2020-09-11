@@ -230,12 +230,14 @@ class Trainer:
 ############################## Modélisation avec BDD vectorisée ###########################################
 
     def get_train_test_data(self, df, y_column):
+        '''
+        Cette fonction retourne les sets de tests et d'entraînement pour une colonne cible donnée.
+        '''
         df = df.copy()
         test = np.arange(0,300,1)
         herbe = all_countries[test]
         y = all_countries[y_column]
         X_train, X_test, y_train, y_test = train_test_split(herbe, y, test_size = 0.3)
-        # Création des données cibles.
         y_train = y_train.values
         y_test = y_test.values
         X_train = np.array(X_train3)
