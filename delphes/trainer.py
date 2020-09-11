@@ -234,9 +234,10 @@ class Trainer:
         test = np.arange(0,300,1)
         herbe = all_countries[test]
         y = all_countries[y_column]
-        X_train3, X_test, y_train, y_test = train_test_split(herbe, y, test_size = 0.3)
+        X_train, X_test, y_train, y_test = train_test_split(herbe, y, test_size = 0.3)
         # Création des données cibles.
         y_train = y_train.values
         y_test = y_test.values
-        X_train3 = np.array(X_train3)
+        X_train = np.array(X_train3)
         X_test = np.array(X_test)
+        return X_train, y_train, X_test, y_test
