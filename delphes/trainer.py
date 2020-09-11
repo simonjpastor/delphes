@@ -152,7 +152,7 @@ class Trainer:
 
 
     # Cette fonction retourne automatiquement X_train, X_test, y_train, y_test de notre base de données twitter.
-    def get_train_test_objects(self, df, X, y):
+    def get_train_test_objects_w2vec(self, df, X, y):
         '''
         Les étapes que cette fonction réalise sont en commentaires. X est la/les colonnes qui sont nos inputs.
         y est la colonne de nos outputs.
@@ -225,3 +225,18 @@ class Trainer:
             for element in prediction:
                 deputies_by_tweet.append(list(df['name'])[element.argmax()])
             return deputies_by_tweet
+
+
+############################## Modélisation avec BDD vectorisée ###########################################
+
+    def get_train_test_data(self, df, y_column):
+        df = df.copy()
+        test = np.arange(0,300,1)
+        herbe = all_countries[test]
+        y = all_countries[y_column]
+        X_train3, X_test, y_train, y_test = train_test_split(herbe, y, test_size = 0.3)
+        # Création des données cibles.
+        y_train = y_train.values
+        y_test = y_test.values
+        X_train3 = np.array(X_train3)
+        X_test = np.array(X_test)
