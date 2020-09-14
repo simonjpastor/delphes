@@ -6,7 +6,7 @@ class Delphes:
   def get_data(self):
     """ DataFrame avec l'âge et le sex """
 
-    path_data = '../../raw_data/ultime_dataframe.h5'
+    path_data = './raw_data/ultime_dataframe.h5'
     data = pd.read_hdf(path_data, 'h5')
     return data
 
