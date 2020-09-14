@@ -152,27 +152,24 @@ class Trainer:
 
 
     # Cette fonction retourne automatiquement X_train, X_test, y_train, y_test de notre base de données twitter.
-<<<<<<< HEAD
-    def get_train_test_objects_w2vec(self, df, X, y):
-=======
-    def get_train_test_objects(self, df, X, y):
->>>>>>> d797f2ea061232e21b179583222179e884f7d307
+
+    # Cette fonction retourne automatiquement X_train, X_test, y_train, y_test de notre base de données twitter.
+    def get_train_test_objects(self, df, column):
         '''
-        Les étapes que cette fonction réalise sont en commentaires. X est la/les colonnes qui sont nos inputs.
-        y est la colonne de nos outputs.
+        Les étapes que cette fonction réalise sont en commentaires.
         '''
         # Copie de la base de données pour éviter les problèmes d'assignation abusive.
         df = df.copy()
         # Récupération de tous les tweets et du nom du député qui les a posté. Création de la cible y.
-        df = df[[X, y]]
-        y1 = pd.get_dummies(df[y])
+        df = df[[column, 'content']]
+        y = pd.get_dummies(df[column])
         # Transformation des tweets en suite de mots (strings) dans une liste.
-        sentences = df[X]
+        sentences = df['content']
         sentences_inter = []
         for sentence in sentences:
             sentences_inter.append(sentence.split())
         # Séparation des données d'entraînement et de test
-        sentences_train, sentences_test, y_train, y_test = train_test_split(sentences_inter, y1, test_size = 0.3)
+        sentences_train, sentences_test, y_train, y_test = train_test_split(sentences_inter, y, test_size = 0.3)
         # Vectorisation des phrases
         word2vec = Word2Vec(sentences=sentences_train)
         # Création des données d'entrée.
@@ -184,7 +181,7 @@ class Trainer:
         y_train = y_train.values
         y_test = y_test.values
         # Sorties de la fonction
-        return X_train_pad, y_train, X_test_pad, y_test
+        return X_train_pad, y_train, X_test_pad, y_test, word2vec
 
 
     # Modeling
@@ -229,20 +226,3 @@ class Trainer:
             for element in prediction:
                 deputies_by_tweet.append(list(df['name'])[element.argmax()])
             return deputies_by_tweet
-
-############################## Modélisation avec BDD vectorisée ###########################################
-
-    def get_train_test_data(self, df, y_column):
-        '''
-        Cette fonction retourne les sets de tests et d'entraînement pour une colonne cible donnée.
-        '''
-        df = df.copy()
-        test = np.arange(0,300,1)
-        herbe = all_countries[test]
-        y = all_countries[y_column]
-        X_train, X_test, y_train, y_test = train_test_split(herbe, y, test_size = 0.3)
-        y_train = y_train.values
-        y_test = y_test.values
-        X_train = np.array(X_train3)
-        X_test = np.array(X_test)
-        return X_train, y_train, X_test, y_test
