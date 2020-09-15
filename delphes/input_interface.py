@@ -13,8 +13,6 @@ import requests
 import diffbot
 import string
 
-os.environ.get
-
 class input_interface:
 
     def __init__(self):
