@@ -1,28 +1,43 @@
-import streamlit as st
-from delphes.real_data import Delphes
+import pandas as pd
+import pytz
+from flask import Flask
+from flask import request
+from flask_cors import CORS
+from termcolor import colored
+from Trainer import embed_sentence, embedding
+from gensim.models import Word2Vec
 
-st.markdown("""
-    # POLITICAL PREDICTOR
-    Political Predictor is an application that predicts the European group corresponding to a given ideology based on the twitter account of 473 deputies.
-""")
-st.markdown("""
-    ## **DATA**
-    - Political group
-    - National Party
-    - Country
-    - Age
-    - Gender(0: man, 1: woman)
-    - tweets
-""")
+app = Flask(__name__)
+CORS(app)
+
+PATH_TO_MODEL = "delphes/data/model_deputies"
+DATA_REF_PATH = "raw_data/cleaned_tweet_df"
+MODEL_PATH = {"country":"delphes/data/model_country"}
+WORD2VEC_PATH = {"country":"delphes/data/word2vec_country"}
+
+text = ['i believe that cats are better than platypus']
+feature = 'country'
+
+model = keras.models.load_model(MODEL_PATH[feature])
+word2vec = Word2Vec.load(WORD2VEC_PATH[feature])
+
+def format_input(text, word2vec):
+    sentences_inter = []
+    for sentence in text:
+        sentences_inter.append(sentence.split())
+    X_train = embedding(word2vec,sentences_inter)
+    formated_input = pad_sequences(X_train, padding='post',value=-1000, dtype='float32')
+    return formated_input
 
 
-otpion = st.slider('nb of lines', 1, 10)
-df = Delphes().get_data()
-filt_df = df.head(otpion)
-st.write(filt_df)
+pipeline_def = {'pipeline': model}
 
-st.markdown("""
+
+
+
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=8080, debug=True)
+own("""
     ## **MODELS**
 """)
-
 
