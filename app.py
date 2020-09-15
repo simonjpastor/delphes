@@ -29,11 +29,20 @@ def format_input(text, word2vec):
     formated_input = pad_sequences(X_train, padding='post',value=-1000, dtype='float32')
     return formated_input
 
+def return_result(formated_input, feature):
+    if feature=='country':
+        pond = np.sqrt(clean_df.groupby('country').count()['content'].values)
+        result = (1000*np.mean(model.predict(format_input(formated_input)), axis=0)/pond).argmax()
+        return pd.get_dummies(clean_df['country']).columns[result]
+    else:
+        result = np.mean(model.predict(format_input(formated_input)), axis=0).argmax()
+        return pd.get_dummies(clean_df[feature]).columns[result]
 
 pipeline_def = {'pipeline': model}
 
-
-
+@app.route('/')
+def index():
+    return 'OK'
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
