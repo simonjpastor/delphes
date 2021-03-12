@@ -68,3 +68,9 @@ Functionnal test with a script:
 Every push of `master` branch will execute `.github/workflows/pythonpackages.yml` docker jobs.
 ## Gitlab
 Every push of `master` branch will execute `.gitlab-ci.yml` docker jobs.
+
+#Screenshots from the Website
+
+<img width="1287" alt="Screenshot 2020-10-07 at 11 22 59" src="https://user-images.githubusercontent.com/68235075/110930419-610be780-8329-11eb-8090-e93c5ccac9b0.png">
+<img width="1300" alt="Screenshot 2020-10-07 at 11 24 02" src="https://user-images.githubusercontent.com/68235075/110930441-65d09b80-8329-11eb-94c3-e92b267a28a0.png">
+<img width="1255" alt="Screenshot 2020-10-07 at 11 25 32" src="https://user-images.githubusercontent.com/68235075/110930458-6c5f1300-8329-11eb-990c-ce14294d48b7.png">
